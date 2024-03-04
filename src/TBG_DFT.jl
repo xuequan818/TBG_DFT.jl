@@ -3,7 +3,7 @@ module TBG_DFT
 using Arpack, LinearAlgebra, KrylovKit
 using Printf, Plots, Plots.PlotMeasures, LaTeXStrings
 using StaticArrays, SparseArrays
-using SpecialFunctions, FFTW
+using SpecialFunctions
 
 include("Model.jl")
 include("basis.jl")

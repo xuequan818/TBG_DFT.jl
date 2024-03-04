@@ -2,3 +2,13 @@ name = "TBG_DFT"
 uuid = "0521def2-fe24-4e96-9fe5-d49136a14f4e"
 authors = ["xquan818 <840169780@qq.com>"]
 version = "0.1.0"
+
+[deps]
+Arpack = "7d9fca2a-8960-54d3-9f78-7d1dccf2cb97"
+KrylovKit = "0b1a1467-8014-51b9-945f-bf0ae24f4b77"
+LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
