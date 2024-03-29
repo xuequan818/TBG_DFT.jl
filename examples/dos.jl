@@ -1,4 +1,4 @@
-#using TBG_DFT
+using TBG_DFT
 using LinearAlgebra
 using Plots
 
