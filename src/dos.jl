@@ -34,9 +34,10 @@ function compute_ldos(ϵ, smearf::DosFunction, basis::BasisLW; ERange=0, n_eigs=
     G0ind = basis.Gmap12[basis.G1max+1, basis.G2max+1]
     ldos = zeros(length(ϵ), nk)
     g(x, μ) = evalf(x, μ, smearf)
+    HV = ham_Potential(basis)
 
     for k = 1:nk
-        Hk = hamK(basis,k)
+        Hk = hamK(basis,k,HV)
         Ek, ψk = eigsolve(Hk, n_eigs, EigSorter(x -> abs(x - ERange); rev=false); krylovdim=n_eigs + 20)
 
         # g(H^{W,L}(q))_{0,0} = \s um_j g(λ_j)|ψ_j|_0 ^2
@@ -56,13 +57,14 @@ function compute_dos_shift(ϵ, smearf::DosFunction, model::TBG1D, EcutL::T, Ecut
 	h = EcutW / K
     xx = collect(range(-EcutW, EcutW, length=2K))
     basis = basisGen(EcutL, EcutW, model, xx)
+    HV = ham_Potential(basis)
 
 	npw = basis.npw
 	G0ind = basis.Gmap12[basis.G1max+1,basis.G2max+1]
 	ldos = zeros(length(ϵ))
 	for k = 1:2K
-        Hk = hamK(basis, k)
-		Ek, ψk = eigsolve(Hk, n_eigs, EigSorter(x -> abs(ERange - x); rev=false); krylovdim=n_eigs + 50)
+        Hk = hamK(basis, k, HV)
+        Ek, ψk = eigsolve(Hk, n_eigs, EigSorter(x -> abs(ERange - x); rev=false); krylovdim=n_eigs + 50)
 
 		# g(H^{W,L}(q))_{0,0} = \s um_j g(λ_j)|ψ_j|_0 ^2
 		pw0k = abs2.([ψkj[G0ind] for ψkj in ψk])
@@ -159,7 +161,7 @@ function compute_ldos_kpm(ϵ, smearf::DosFunction, basis::BasisLW, M::Int64; Npt
     coef = genKPM(M, smearf.σ, pt, ϵ, E1, E2)
     ck = zeros(size(ldos,1))
     for k = 1:nk
-        Hk = hamK(basis, k)
+        Hk = hamK(basis, k, HV)
         Hks = (Hk - E1 * I) / E2
         THk0 = compute_TH0(M, Hks, G0ind)
 
@@ -192,7 +194,7 @@ function compute_dos_shift_kpm(ϵ, smearf::DosFunction, model::TBG1D, EcutL::T, 
     coef = genKPM(M, smearf.σ, pt, ϵ, E1, E2)
     ck = zero(ldos)
     for k = 1:basis.nk
-        Hk = hamK(basis, k)
+        Hk = hamK(basis, k, HV)
         Hks = (Hk - E1 * I) / E2
 		THk0 = compute_TH0(M,Hks,G0ind)
 

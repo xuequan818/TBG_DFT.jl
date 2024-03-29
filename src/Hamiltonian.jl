@@ -60,4 +60,6 @@ end
 
 hamK(basis::Basis, k::Int64) = ham_Kinetic(basis, basis.kpts[k]) + ham_Potential(basis)
 
+hamK(basis::Basis, k::Int64, HV) = ham_Kinetic(basis, basis.kpts[k]) + HV
+
 hamFull(basis::Basis) = map(k->hamK(basis,k), 1:basis.nk)
