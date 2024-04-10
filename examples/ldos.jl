@@ -14,7 +14,7 @@ basis = Basis(EcL, EcW, model; kpts = Kgrid);
 
 σ = 0.4
 ϵ = collect(-10:0.1:34)
-@time ldos = compute_ldos_kpm(ϵ, Gauss(σ), basis, 2000);
+@time ldos = compute_ldos_kpm(ϵ, Gauss(σ), basis);
 heatmap(Kgrid, ϵ, ldos, title=L"L=%$EcL, W = %$EcW", grid=:off, size=(740, 600),  xlims=(-10,10),levels=14, xlabel=L"\xi", ylabel="Energy", tickfontsize=20, legendfontsize=18, guidefontsize=26, titlefontsize=30, left_margin=2mm, right_margin=4mm)
 
 jldsave("ldos_test.jld2"; Kgrid, ϵ, ldos)
