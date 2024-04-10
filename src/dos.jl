@@ -202,7 +202,7 @@ function compute_dos_shift_kpm(ϵ, smearf::DosFunction, model::TBG1D, EcutL::T, 
     M, coef = genKPM(M, smearf.σ, pt, ϵ, E1, E2)
     @show M 
     ck = zero(ldos)
-    for k = 1#:nk
+    for k = 1:nk
         (k % 50 == 0 || k == nk) && println(" $(k) / $(nk) ")
 
         Hk = hamK(basis, k, HV)
