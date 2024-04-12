@@ -177,7 +177,7 @@ function compute_ldos_kpm(ϵ, smearf::DosFunction, basis::BasisLW; M=Int(6e4), N
         ldos[:, k] = ck
     end
 
-    ldos ./ E2
+    ldos ./ (E2 * 2pi)
 end
 
 
@@ -214,7 +214,7 @@ function compute_dos_shift_kpm(ϵ, smearf::DosFunction, model::TBG1D, EcutL::T, 
         ldos += ck 
 	end
 
-    ldos .* h ./ E2
+    ldos .* h ./ (E2 * 2pi)
 end
 
 compute_dos_shift_kpm(ϵ, smearf::DosFunction, basis::BasisLW, K::Int64; M=Int(6e4), Npt=Int(round(1.1M))) = compute_dos_shift_kpm(ϵ, smearf, basis.model, basis.EcutL, basis.EcutW, K; M=M, Npt=Npt)
