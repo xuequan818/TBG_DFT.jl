@@ -7,8 +7,8 @@ L = 1
 ϵ = 0
 model = TbgToy(L, ϵ, gauss)
 
-EcL = 1600
-EcW = 120
+EcL = 160
+EcW = 12
 basis = Basis(EcL, EcW, model);
 
 σ = 0.4
