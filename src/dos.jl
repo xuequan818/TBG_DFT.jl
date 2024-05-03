@@ -185,7 +185,7 @@ function compute_TH0(M::Int64, H::SparseMatrixCSC, ind0::Int64)
     TH0
 end
 
-function compute_ldos_kpm(ϵ, smearf::DosFunction, basis::BasisLW; M=Int(1e5), Npt=Int(round(1.1M)), tol=1e-6, method=KPM())
+function compute_ldos_kpm(ϵ, smearf::DosFunction, basis::BasisLW; M=Int(1e5), Npt=Int(round(1.1M)), tol=1e-6, kwidth=5.0,method = KPM())
 
     kwidth = 5.0
     HV = ham_Potential(basis)
@@ -226,9 +226,12 @@ function compute_ldos_kpm(ϵ, smearf::DosFunction, basis::BasisLW; M=Int(1e5), N
 end
 
 
-function compute_dos_shift_kpm(ϵ, smearf::DosFunction, model::TBG1D, EcutL::T, EcutW::T, h::Float64; M=Int(1e5), Npt=Int(round(1.1M)), tol=1e-6, method=KPM(), Ktrunc=EcutW) where {T<:Real}
+function compute_dos_shift_kpm(ϵ, smearf::DosFunction, model::TBG1D, EcutL::T, EcutW::T, h::Float64; M=Int(1e5), Npt=Int(round(1.1M)), tol=1e-6, Ktrunc=EcutW, kwidth=5.0, method=KPM()) where {T<:Real}
 
-    kwidth = 5.0
+    # Note that the LDoS of this toy model has symmetry about 0
+    # we just compute ξ ∈ [0,Ktrunc]
+    # the final DoS will be normalized by 2
+    
     hgrid = Int(round(kwidth / h))
     xx = collect(0:h:Ktrunc)[2:end]
     basis = basisGen(EcutL, EcutW, model, xx)
