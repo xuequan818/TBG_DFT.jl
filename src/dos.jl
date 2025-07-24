@@ -113,10 +113,14 @@ function genCheb(M::Int64, σ::T, pt, Ept, E1::Float64, E2::Float64, ::KPM; tol=
     Es = (Ept .- E1) ./ E2
     coef = zeros(length(Ept), M + 1)
     cM = (M + 1) * ones(Int, length(Ept))
-    for (i, Esi) in enumerate(Es)
-        @views coef[i, :] = real.(fft(g.(pt, Esi))[1:M+1]) .* 2 ./ length(pt)
+    @views for (i, Esi) in enumerate(Es)
+        gpt = @. complex(g(pt, Esi))
+        FFTW.fft!(gpt)
+        coef[i, :] = real.(gpt[1:M+1])
+        ct = 2 / length(pt)
+        @. coef[i, :] *= ct
         coef[i, 1] /= 2
-        @views ciM = findlast(x -> abs(x) > tol, coef[i, :])
+        ciM = findlast(x -> abs(x) > tol, coef[i, :])
         if ciM != nothing
             cM[i] = ciM
         end
@@ -139,8 +143,12 @@ function genCheb(M::Int64, σ::T, pt, Ept, E1::Float64, E2::Float64, ::JacksonKP
     Es = (Ept .- E1) ./ E2
     coef = zeros(M + 1, length(Ept))
     for (i, Esi) in enumerate(Es)
-        coef[:, i] = real.(fft(g.(pt, Esi))[1:M+1]) .* 2 ./ length(pt)
-        coef[1, i] /= 2
+        gpt = @. complex(g(pt, Esi))
+        FFTW.fft!(gpt)
+        coef[i, :] = real.(gpt[1:M+1])
+        ct = 2 / length(pt)
+        @. coef[i, :] *= ct
+        coef[i, 1] /= 2
     end
     coefJD = coef .* JacksonDamping(M)
 
@@ -169,7 +177,7 @@ function compute_TH0(M::Int64, H::SparseMatrixCSC, ind0::Int64)
     u0[ind0] = 1.0
     u1 = H * u0
     TH0[2] = u1[ind0]
-    u2 = similar(u1)
+    u2 = copy(u1)
     for k = 3:M+1
         mul!(u2, H, u1)
         @. u2 = 2.0 * u2 - u0
@@ -204,9 +212,10 @@ function compute_ldos_kpm(ϵ, smearf::DosFunction,
     ldos = zeros(length(ϵ), basis.nk)
     Folds.foreach(1:basis.nk, WorkStealingEx()) do ik
         G0ind = basis.kpoints[ik].G0_index
-        Hk = ham(basis,ik)
-        Hks = (Hk - E1 * I) / E2
-        THk0 = compute_TH0(newM, Hks, G0ind)
+        Hk = ham(basis, ik)
+        mul!(Hk, -E1, I, true, true)
+        rdiv!(Hk, E2)
+        THk0 = compute_TH0(newM, Hk, G0ind)
 
         ck = coef * THk0
         @views ldos[:, ik] = ck ./ E2
@@ -242,21 +251,26 @@ function compute_dos_shift_kpm(ϵ, smearf::DosFunction,
     println(" M = $(newM)")
 
     nk = basis.nk
+    p = prog(basis.nk)
     dos = Folds.sum(1:nk, WorkStealingEx()) do ik
+        next!(p)
+
         G0ind = basis.kpoints[ik].G0_index
         Hk = ham(basis, ik)
-        Hks = (Hk - E1 * I) / E2
-        THk0 = compute_TH0(newM, Hks, G0ind)
+        mul!(Hk, -E1, I, true, true)
+        rdiv!(Hk, E2)
+        THk0 = compute_TH0(newM, Hk, G0ind)
 
         # g(H^{W,L}(q))_{0,0} = \sum_m cm*Tm(H(q))_{0,0}
         ck = coef * THk0
         if 1 < ik < nk
-            ck =  2 .* ck ./ E2
+            rdiv!(ck, E2/2)
         else
-            ck = ck ./ E2
+            rdiv!(ck, E2)
         end
         ck
     end
+    finish!(p)
     
     dos .* h ./ 2pi
 end

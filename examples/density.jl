@@ -13,11 +13,14 @@ EcW = 20
 basis = Basis(EcL, EcW, model);
 
 σ = 1.
-xs = collect(-10.:0.1:34);
+xs = collect(-10.:1:34);
 h = 0.1
 @time rho_vec = compute_density_vec(xs, Gauss(σ), basis, h; Ktrunc=10, tol=1e-6);
 xx = collect(-10:0.01:30)
 rho = compute_density(xx, rho_vec, basis)
+rho_eig_vec = compute_density_eig(xs, Gauss(σ), basis, h, 50)
+rho_eig = compute_density(xx, rho_eig_vec, basis)
+
 #plot!(xx, rho*1000)
 
 heatmap(xx, xs, rho, title=L"\epsilon=%$ϵ", grid=:off, size=(740, 600), levels=14, xlabel=L"x", ylabel="Energy", tickfontsize=20, legendfontsize=18, guidefontsize=26, titlefontsize=30, left_margin=2mm, right_margin=8mm)

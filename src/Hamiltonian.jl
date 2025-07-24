@@ -3,8 +3,7 @@ export  ham_Kinetic, ham_Potential, ham
 # HK = 0.5|G1+G2+ξ|^2δ_{G,G'}
 function ham_Kinetic(basis::Basis, ik::Int)
     kpt = basis.kpoints[ik]
-    vals = 0.5 .* (kpt.coordinate .+ kpt.G_cart_sum).^2
-
+    vals = @. 0.5 * (kpt.coordinate + kpt.G_cart_sum)^2
     sparse(1:kpt.npw, 1:kpt.npw, vals)
 end
 

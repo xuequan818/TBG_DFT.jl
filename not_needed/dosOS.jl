@@ -22,7 +22,7 @@ for ϵ in E
 end
 
 
-f = jldopen("dos_ho_02.jld2")
+f = jldopen("pluto/data_dos_os/dos_os_02.jld2")
 dos = f["dos"]
 xs = f["xs"]
 E = f["E"]

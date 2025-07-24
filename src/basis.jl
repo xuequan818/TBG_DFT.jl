@@ -77,7 +77,7 @@ function Basis(EcutL::Real, EcutW::Real,
     dim = size(latR[1],1)
     SdL = (sqrt(pi) * EcutL) ^ dim * gamma(dim/2 + 1)
 
-    n_fftw = 1 .+ 4 .* floor.(Int, max(EcutL, EcutW) ./ [norm(latR[j]) for j = 1:2])
+    n_fftw = 1 .+ 4 .* ceil.(Int, 0.5*(EcutL+EcutW) ./ [norm(latR[j]) for j = 1:2])
     G_sheet_vec = G_vectors.(n_fftw)
     G_sheet_cart = [latR[j] .* G_sheet_vec[j] for j = 1:2]
 

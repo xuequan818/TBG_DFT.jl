@@ -65,7 +65,7 @@ function compute_density_vec(ϵ, smearf::DosFunction,
         else
             ck = ck ./ E2
         end
-        rho_vec[ik] = ck'
+        rho_vec[ik] = transpose(ck)
     end
 
     rho_vec .* h ./ 2pi
