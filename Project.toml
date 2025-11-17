@@ -1,6 +1,6 @@
-name = "TBG_DFT"
+name = "MomentumDOS"
 uuid = "0521def2-fe24-4e96-9fe5-d49136a14f4e"
-authors = ["xquan818 <840169780@qq.com>"]
+authors = ["xquan818 <xquan818@gmail.com>"]
 version = "0.1.0"
 
 [deps]

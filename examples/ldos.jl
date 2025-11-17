@@ -1,4 +1,4 @@
-using TBG_DFT
+using MomentumDOS
 using LinearAlgebra
 using Plots, Plots.Measures, LaTeXStrings
 
@@ -7,8 +7,8 @@ L = 1
 ϵ = 0.0
 model = TbgToy(L, ϵ, gauss)
 
-EcL = 400
-EcW = 50
+EcL = 300
+EcW = 30
 Kgrid = collect(1:0.05:5)
 basis = Basis(EcL, EcW, model; kpts = Kgrid);
 

@@ -1,4 +1,4 @@
-#using TBG_DFT
+using MomentumDOS
 using LinearAlgebra
 
 gauss = [Gaussian(7, 0.05), Gaussian(5, 0.05)]

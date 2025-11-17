@@ -1,4 +1,4 @@
-using TBG_DFT
+using MomentumDOS
 using LinearAlgebra
 using Test
 

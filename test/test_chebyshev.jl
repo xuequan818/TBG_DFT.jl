@@ -1,5 +1,5 @@
-using TBG_DFT
-using TBG_DFT: KPM, JacksonKPM
+using MomentumDOS
+using MomentumDOS: KPM, JacksonKPM
 using LinearAlgebra, KrylovKit
 using Plots, Plots.Measures, LaTeXStrings
 
@@ -39,8 +39,8 @@ M = 100000
 Npt = Int(round(1.1M))
 pt = cos.(range(0, 2pi - pi / Npt, length=2Npt))
 
-@time M1, cf1 = TBG_DFT.genCheb(M, σ, pt, [Ept], E1, E2, KPM(); tol=1e-6)
-#@time M2, cf2 = TBG_DFT.genCheb(M, σ, pt, [Ept], E1, E2, JacksonKPM(); tol=1e-6)
+@time M1, cf1 = MomentumDOS.genCheb(M, σ, pt, [Ept], E1, E2, KPM(); tol=1e-6)
+#@time M2, cf2 = MomentumDOS.genCheb(M, σ, pt, [Ept], E1, E2, JacksonKPM(); tol=1e-6)
 h1(x) = gCP(x; cf=cf1)
 #h2(x) = gCP(x; cf=cf2)
 xx = (collect(-8.:0.1 :34)  .- E1) ./ E2
@@ -65,7 +65,7 @@ basis = Basis(EcL, EcW, model; kpts=Kgrid);
 
 σ = 0.4
 ϵ = collect(-10:0.1:34)
-@time ldos_ref = TBG_DFT.compute_ldos(ϵ, Gauss(σ), basis;ERange=10, n_eigs=100)
+@time ldos_ref = MomentumDOS.compute_ldos(ϵ, Gauss(σ), basis;ERange=10, n_eigs=100)
 @time ldos = compute_ldos_kpm(ϵ, Gauss(σ), basis; M=Int(1e5), tol = 1e-5);
 @show norm(ldos - ldos_ref, Inf)
 heatmap(Kgrid, ϵ, ldos, title=L"L=%$EcL, W = %$EcW", grid=:off, size=(740, 600), levels=14, xlabel=L"\xi", ylabel="Energy", tickfontsize=20, legendfontsize=18, guidefontsize=26, titlefontsize=30, left_margin=2mm, right_margin=4mm)
@@ -83,7 +83,7 @@ basis = Basis(EcL, EcW, model);
 xs = collect(-10:0.1:34)
 h = 0.08
 K = Int(round(EcW / h))
-@time dos_ref = TBG_DFT.compute_dos_shift(xs, Gauss(σ), basis, 100, K; ERange=10)
+@time dos_ref = MomentumDOS.compute_dos_shift(xs, Gauss(σ), basis, 100, K; ERange=10)
 @time dos = compute_dos_shift_kpm(xs, Gauss(σ), basis, h; M=Int(1e5), tol=1e-5);
 @show norm(dos - dos_ref, Inf)
 plot(xs,dos_ref)
