@@ -1,6 +1,6 @@
 # MomentumDOS.jl
 
-Code companion for [![DOI](https://img.shields.io/badge/DOI-10.48550/arXiv.2510.15369-blue)](https://doi.org/10.48550/arXiv.2510.15369) which computes the density of states using the momentum-space method. The semiclassical version can be found [here](https://github.com/epolack/SacerDOS.jl).
+Code companion for [![DOI](https://img.shields.io/badge/DOI-10.48550/arXiv.2510.15369-blue)](https://doi.org/10.48550/arXiv.2510.15369) which computes the density of states using the **momentum-space** method. The **semiclassical** version can be found [here](https://github.com/epolack/SacerDOS.jl).
 
 ## Installation
 MomentumDOS.jl is an unregistered package and therefore needs to be downloaded or cloned to the user's local computer first, and then installed by running
